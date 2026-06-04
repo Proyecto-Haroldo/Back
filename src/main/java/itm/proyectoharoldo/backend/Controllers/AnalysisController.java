@@ -4,6 +4,7 @@ import itm.proyectoharoldo.backend.Models.DTO.Analysis.*;
 import itm.proyectoharoldo.backend.Models.DTO.Questionnaire.QuestionAnswerDTO;
 import itm.proyectoharoldo.backend.Services.*;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.*;
@@ -63,7 +64,7 @@ public class AnalysisController {
     }
 
     @PutMapping("/{analysisId}/grade")
-    public ResponseEntity<AnalysisDTO> gradeAnalysis(@PathVariable Long analysisId, @RequestBody GradeRequest gradingRequest) {
+    public ResponseEntity<AnalysisDTO> gradeAnalysis(@PathVariable Long analysisId, @Valid @RequestBody GradeRequest gradingRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok(analysisService.gradeAnalysis(analysisId, gradingRequest, email));
     }
