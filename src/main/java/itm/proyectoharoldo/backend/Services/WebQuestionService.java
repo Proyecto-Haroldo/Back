@@ -6,6 +6,7 @@ import itm.proyectoharoldo.backend.Repositories.*;
 import itm.proyectoharoldo.backend.Utility.QuestionConverter;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class WebQuestionService {
 
@@ -77,7 +79,9 @@ public class WebQuestionService {
                 .orElseThrow(() -> new NoSuchElementException(
                         "Cuestionario no encontrado para categoría: " + webModel.getCategoryName()));
 
-        return questionRepository.save(QuestionConverter.convertWebModelToEntity(webModel, questionnaire));
+        Question createdQuestion = questionRepository.save(QuestionConverter.convertWebModelToEntity(webModel, questionnaire));
+        log.info("Created question successfully with id: {}, question text: {}", createdQuestion.getQuestionid(), createdQuestion.getQuestion());
+        return createdQuestion;
     }
 
     @Transactional
@@ -140,6 +144,7 @@ public class WebQuestionService {
             throw new NoSuchElementException("Pregunta no encontrada con id: " + id);
         }
         questionRepository.deleteById(id);
+        log.info("Deleted question successfully with id: {}", id);
     }
 
     private QuestionWebModel toWebModel(Question question) {

@@ -1,5 +1,6 @@
 package itm.proyectoharoldo.backend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,7 @@ import itm.proyectoharoldo.backend.Utility.*;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -40,9 +42,13 @@ public class AuthService {
             () -> new UsernameNotFoundException("El correo no está registrado")
         );
 
+        log.info("Login attempt from user: {}", authenticatingUser.getEmail());
+
         authenticateUserFromRequest(authRequest);
 
         String message = "Inicio de sesión exitoso.";
+
+        log.info("Login attempt successful from user: {}", authenticatingUser.getEmail());
 
         return toAuthResponse(authenticatingUser, message);
 
@@ -63,6 +69,8 @@ public class AuthService {
         }
 
         User registeredUser = userRepository.save(createUserFromRegisterRequest(registerRequest));
+
+        log.info("Register succesful for user: {}", registeredUser.getEmail());
 
         if(registerRequest.getRole().getId() == ADVISER_ROLE_ID){
             gmailEmailService.sendAdviserWelcomeEmail(registerRequest.getEmail(), registerRequest.getLegalName());

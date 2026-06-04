@@ -5,8 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,10 +17,9 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GmailEmailService implements IEmailService {
-
-    private static final Logger logger = LoggerFactory.getLogger(GmailEmailService.class);
 
     private final JavaMailSender mailSender;
 
@@ -34,6 +32,7 @@ public class GmailEmailService implements IEmailService {
                 .replace("{{name}}", toName)
                 .replace("{{email}}", toEmail);
         sendEmail(toEmail, subject, html);
+        log.info("User Welcoming Email sent successfully to: {}", toEmail);
     }
 
     public void sendAdviserWelcomeEmail(String toEmail, String toName) {
@@ -42,6 +41,7 @@ public class GmailEmailService implements IEmailService {
                 .replace("{{name}}", toName)
                 .replace("{{email}}", toEmail);
         sendEmail(toEmail, subject, html);
+        log.info("Adviser Welcoming Email sent successfully to: {}", toEmail);
     }
 
     public void sendAdviserAccountAuthorizedEmail(String toEmail, String toName) {
@@ -50,6 +50,7 @@ public class GmailEmailService implements IEmailService {
                 .replace("{{name}}", toName)
                 .replace("{{email}}", toEmail);
         sendEmail(toEmail, subject, html);
+        log.info("Adviser Account Authorized Email sent successfully to: {}", toEmail);
     }
 
     public void sendAccountDeletedEmail(String toEmail, String toName) {
@@ -59,6 +60,7 @@ public class GmailEmailService implements IEmailService {
                 .replace("{{email}}", toEmail)
                 .replace("{{date}}", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         sendEmail(toEmail, subject, html);
+        log.info("Deleted Account Email sent successfully to: {}", toEmail);
     }
 
     @SuppressWarnings("null")
@@ -73,9 +75,9 @@ public class GmailEmailService implements IEmailService {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            logger.info("Email sent successfully to {}", toEmail);
+            log.info("Email sent successfully to {}", toEmail);
         } catch (Exception e) {
-            logger.error("Failed to send email to {}: {}", toEmail, e.getMessage());
+            log.error("Failed to send email to {}: {}", toEmail, e.getMessage());
         }
     }
 
@@ -84,7 +86,7 @@ public class GmailEmailService implements IEmailService {
             ClassPathResource resource = new ClassPathResource("HtmlTemplates/" + templateName);
             return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Failed to load template {}: {}", templateName, e.getMessage());
+            log.error("Failed to load template {}: {}", templateName, e.getMessage());
             throw new RuntimeException("Error al cargar plantilla: " + templateName);
         }
     }

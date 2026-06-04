@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,7 @@ import itm.proyectoharoldo.backend.Repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CategoryService {
 
@@ -40,7 +44,10 @@ public class CategoryService {
         newCategory.setDescription(dto.getDescription());
         newCategory.setDecimalvalue(BigDecimal.ZERO);
         newCategory.setIcon(dto.getIcon());
-        return toDTO(categoryRepository.save(newCategory));
+
+        Category savedCategory = categoryRepository.save(newCategory);
+        log.info("Category created successfully: {}", newCategory);
+        return toDTO(savedCategory);
     }
 
     @SuppressWarnings("null")
@@ -62,6 +69,7 @@ public class CategoryService {
         Category existing = categoryRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada con id: " + id));
         categoryRepository.delete(existing);
+        log.info("Deleted category with id: {}", id);
     }
 
     public CategoryDTO toDTO(Category category) {

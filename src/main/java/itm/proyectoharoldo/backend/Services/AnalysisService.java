@@ -1,5 +1,6 @@
 package itm.proyectoharoldo.backend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AnalysisService {
 
@@ -90,7 +92,9 @@ public class AnalysisService {
             analysis.setColorSemaforo(request.getColorSemaforo().trim().toLowerCase());
         }
 
-        return toAnalysisDTO(analysisRepository.save(analysis));
+        Analysis finalAnalysis = analysisRepository.save(analysis);
+        log.info("Analysis with id: {} graded by {}", analysisId, adviserEmail);
+        return toAnalysisDTO(finalAnalysis);
     }
 
     @SuppressWarnings("null")
@@ -139,6 +143,7 @@ public class AnalysisService {
     public void deleteAnalysisById(@NonNull Long analysisId) {
         analysisRepository.delete(analysisRepository.findByIdWithDetails(analysisId)
                 .orElseThrow(() -> new NoSuchElementException("No se halló el análisis de ID: " + analysisId)));
+        log.info("Analysis with id: {} was deleted", analysisId);
     }
 
     @Transactional(readOnly = true)

@@ -6,6 +6,7 @@ import itm.proyectoharoldo.backend.Models.DTO.Questionnaire.QuestionnaireDTO;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class QuestionnaireService {
 
@@ -69,7 +71,9 @@ public class QuestionnaireService {
         newQuestionnaire.setCategory(category);
         newQuestionnaire.setCreator(creator);
 
-        return toQuestionnaireDTO(questionnaireRepository.save(newQuestionnaire));
+        Questionnaire  savedQuestionnaire = questionnaireRepository.save(newQuestionnaire);
+        log.info("Questionnaire created successfully: {}", savedQuestionnaire);
+        return toQuestionnaireDTO(savedQuestionnaire);
     }
 
     @Transactional
@@ -104,6 +108,7 @@ public class QuestionnaireService {
             throw new NoSuchElementException("Cuestionario no encontrado con id: " + id);
         }
         questionnaireRepository.deleteById(id);
+        log.info("Questionnaire deleted successfully with id: {}", id);
     }
 
     public QuestionnaireDTO getQuestionnaireDTOById(@NonNull Long id) {

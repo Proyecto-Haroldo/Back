@@ -10,6 +10,7 @@ import itm.proyectoharoldo.backend.Utility.AIAnalysisParser;
 
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.*;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class ClientAnswerService {
 
@@ -93,7 +95,9 @@ public class ClientAnswerService {
         analysis.setColorSemaforo(dto.getColorSemaforo());
         analysis.setResumenIA(dto.getResumenUsuario());
 
-        return analysisRepository.save(analysis);
+        Analysis savedAnalysis = analysisRepository.save(analysis);
+        log.info("Analysis created from questionnaire result successfully");
+        return savedAnalysis;
     }
 
     @SuppressWarnings("null")
@@ -129,6 +133,7 @@ public class ClientAnswerService {
         try {
             return new AIAnalysisParser().parseResponseToAnalysis(cleaned);
         } catch (Exception ex) {
+            log.error("Exception generated when parsing AI response: {}", response.getResponse());
             return null;
         }
     }

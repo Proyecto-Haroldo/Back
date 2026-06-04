@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import itm.proyectoharoldo.backend.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class UserService {
 
@@ -97,6 +99,7 @@ public class UserService {
         
         gmailEmailService.sendAccountDeletedEmail(existing.getEmail(), existing.getLegalName());
         userRepository.delete(existing);
+        log.info("User deleted successfully with id: {}", userId);
     }
 
     private UserDTO toUserDTO(User user) {

@@ -7,6 +7,7 @@ import itm.proyectoharoldo.backend.Models.User;
 import itm.proyectoharoldo.backend.Repositories.ScheduleRepository;
 import itm.proyectoharoldo.backend.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ScheduleService {
 
@@ -102,6 +104,7 @@ public class ScheduleService {
                 .build();
 
         Schedule saved = scheduleRepository.save(row);
+        log.info("Created schedule with id: {}", saved.getId());
         return ScheduleResponseDTO.fromEntity(saved);
     }
 
