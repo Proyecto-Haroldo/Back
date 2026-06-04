@@ -1,5 +1,6 @@
 package itm.proyectoharoldo.backend.Models.DTO.Schedule;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,18 +18,25 @@ public class CreateScheduleRequest {
 
     @NotBlank
     private String clientType;
+
     @NotBlank
     private String serviceType;
+
     @NotNull
+    @FutureOrPresent
     private LocalDate date;
+
     @NotBlank
     private String time;
+
     @NotBlank
     private String modality;
+
     private String additionalNotes;
 
     @NotNull
     private Long advisorId;
+
     @NotNull
     private Long clientId;
 }
