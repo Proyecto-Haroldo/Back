@@ -3,6 +3,7 @@ package itm.proyectoharoldo.backend.Services;
 import itm.proyectoharoldo.backend.Models.*;
 import itm.proyectoharoldo.backend.Models.Web.AnswersOptionWebModel;
 import itm.proyectoharoldo.backend.Repositories.MultipleOptionQuestionAnswerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MultipleOptionAnswersService {
 
     private final MultipleOptionQuestionAnswerRepository answerRepository;
-
-    public MultipleOptionAnswersService(MultipleOptionQuestionAnswerRepository answerRepository){
-        this.answerRepository = answerRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<MultipleOptionQuestionAnswer> getAnswersByQuestionId(Long questionid){

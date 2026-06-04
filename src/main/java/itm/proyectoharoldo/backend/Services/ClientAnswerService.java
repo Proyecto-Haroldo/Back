@@ -8,8 +8,7 @@ import itm.proyectoharoldo.backend.Repositories.*;
 
 import itm.proyectoharoldo.backend.Utility.AIAnalysisParser;
 
-import lombok.AllArgsConstructor;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ import java.util.stream.*;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientAnswerService {
 
     private final UserRepository userRepository;

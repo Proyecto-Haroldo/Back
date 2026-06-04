@@ -21,9 +21,9 @@ import itm.proyectoharoldo.backend.Repositories.RoleRepository;
 import itm.proyectoharoldo.backend.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-@Slf4j
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
