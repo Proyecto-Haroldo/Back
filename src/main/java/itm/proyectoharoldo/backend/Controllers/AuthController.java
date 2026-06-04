@@ -3,8 +3,6 @@ package itm.proyectoharoldo.backend.Controllers;
 import itm.proyectoharoldo.backend.Models.DTO.Auth.*;
 import itm.proyectoharoldo.backend.Services.AuthService;
 
-import itm.proyectoharoldo.backend.Services.RateLimiterService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,29 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final RateLimiterService rateLimiterService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request, HttpServletRequest httpServletRequest) {
-
-        String ip = httpServletRequest.getRemoteAddr();
-        if(!rateLimiterService.tryConsume(ip)){
-            log.warn("Login controller rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(authService.processLogin(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpServletRequest) {
-
-        String ip = httpServletRequest.getRemoteAddr();
-        if(!rateLimiterService.tryConsume(ip)){
-            log.warn("Register controller rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.processRegister(request));
     }
 
