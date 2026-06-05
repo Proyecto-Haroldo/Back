@@ -26,9 +26,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
         String path   = request.getServletPath();
 
         String ip = request.getRemoteAddr();
-        log.info("IP {} tried an authentication request to {}", ip, path);
 
         if(path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
+            log.info("IP {} tried an authentication request to {}", ip, path);
             if(!rateLimiterService.tryConsume(ip)){
                 log.warn("Rate limit exceeded for IP: {}", ip);
                 response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
