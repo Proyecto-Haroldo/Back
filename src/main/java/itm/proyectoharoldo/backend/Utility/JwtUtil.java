@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -38,6 +40,17 @@ public class JwtUtil {
                 .build()
                 .verify(token)
                 .getSubject();
+    }
+
+    public LocalDateTime getExpiry(String token){
+        Date expiry = JWT.require(algorithm)
+                .build()
+                .verify(token)
+                .getExpiresAt();
+
+        return expiry.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

@@ -28,4 +28,13 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.processRegister(request));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            authService.logout(token);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
 }

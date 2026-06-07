@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final GmailEmailService gmailEmailService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @NonNull
     private final Long ADVISER_ROLE_ID = 3L;
@@ -80,6 +82,13 @@ public class AuthService {
 
         return toAuthResponse(registeredUser, "Usuario registrado existosamente");
 
+    }
+
+    @Transactional
+    public void logout(String token) {
+        LocalDateTime expiry = jwtUtil.getExpiry(token);
+        tokenBlacklistService.blacklistToken(token, expiry);
+        log.info("User logged out successfully");
     }
 
     private AuthResponse toAuthResponse(User user, String message){
