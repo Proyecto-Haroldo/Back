@@ -24,6 +24,9 @@ public class AIService implements IAIService {
     @Value("${microservice.ia.url}")
     private String iaUrl;
 
+    @Value("${microservice.ia.apikey}")
+    private String aiServiceApiKey;
+
     private final RestTemplate restTemplate;
 
     public AIService() {
@@ -44,6 +47,7 @@ public class AIService implements IAIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Internal-Api-Key", aiServiceApiKey);
 
         HttpEntity<AIRecommendationRequest> entity = new HttpEntity<>(new AIRecommendationRequest(prompt), headers);
 
